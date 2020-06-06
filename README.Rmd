@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
-The goal of `checkinfo` is to surface `CRAN` checks information into a `sessioninfo` output specific to the user's platform.
+The goal of `checkinfo` is to surface `CRAN` checks information into a [sessioninfo](https://github.com/r-lib/sessioninfo) output specific to the user's platform.
 
 ## Installation
 
@@ -34,6 +34,27 @@ This is a basic example which shows you how to solve a common problem:
 ```{r example}
 library(craninfo)
 ```
+
+On CRAN each package is continually checked to see if there are any problems with it on a variety of platforms and this information is always available for package users to view.
+
+[cchecks](https://github.com/ropenscilabs/cchecks) is an R package that uses an API to retrieve information from these tests in an efficient manner.
+
+Here is the output from `dplyr`
+
+```{r}
+(cchecks::cch_pkgs('dplyr'))$data$checks
+```
+
+What if you wanted to use this same information to create an output similar to sessioninfo, but append to it the information from the current CRAN checks for each loaded namespace (package) tailored to your platform.
+
+This is what `craninfo` does for you!
+
+With this information you can
+
+  - See if there are any problems with the packages that you are using in an R/Rmd script
+  - Attach it to a {reprex} to help the maintainer help you even more efficiently.
+  - See if you have the most current version of a package installed, and if not you can decide if you should install it given it's current CRAN status.
+  - Compare multiple CRAN check flavors with ease.
 
 ## Console Output
 

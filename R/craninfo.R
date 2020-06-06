@@ -67,5 +67,7 @@ craninfo <- function(cran_type = 'release', platform = get_os(), machine = R.ver
   
   class(sip_check) <- c('craninfo','data.frame')
   
+  attr(sip_check,'flavor') <- this_flavor
+  
   sip_check
 }

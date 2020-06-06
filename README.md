@@ -10,7 +10,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 <!-- badges: end -->
 
 The goal of `checkinfo` is to surface `CRAN` checks information into a
-`sessioninfo` output specific to the user’s platform.
+[sessioninfo](https://github.com/r-lib/sessioninfo) output specific to
+the user’s platform.
 
 ## Installation
 
@@ -27,13 +28,72 @@ This is a basic example which shows you how to solve a common problem:
 library(craninfo)
 ```
 
+On CRAN each package is continually checked to see if there are any
+problems with it on a variety of platforms and this information is
+always available for package users to view.
+
+[cchecks](https://github.com/ropenscilabs/cchecks) is an R package that
+uses an API to retrieve information from these tests in an efficient
+manner.
+
+Here is the output from `dplyr`
+
+``` r
+(cchecks::cch_pkgs('dplyr'))$data$checks
+#>                               flavor version tinstall tcheck ttotal status
+#> 1  r-devel-linux-x86_64-debian-clang   1.0.0    17.87 168.83 186.70     OK
+#> 2    r-devel-linux-x86_64-debian-gcc   1.0.0    14.50 129.04 143.54     OK
+#> 3  r-devel-linux-x86_64-fedora-clang   1.0.0     0.00   0.00 229.62   NOTE
+#> 4    r-devel-linux-x86_64-fedora-gcc   1.0.0     0.00   0.00 219.33   NOTE
+#> 5        r-devel-windows-ix86+x86_64   1.0.0     3.00   8.00  11.00  ERROR
+#> 6             r-patched-linux-x86_64   1.0.0    17.81 165.70 183.51     OK
+#> 7              r-patched-solaris-x86   1.0.0     0.00   0.00 258.80   NOTE
+#> 8             r-release-linux-x86_64   1.0.0    17.04 164.00 181.04     OK
+#> 9               r-release-osx-x86_64   1.0.0     0.00   0.00   0.00   NOTE
+#> 10     r-release-windows-ix86+x86_64   1.0.0    58.00 363.00 421.00     OK
+#> 11               r-oldrel-osx-x86_64   1.0.0     0.00   0.00   0.00   NOTE
+#> 12      r-oldrel-windows-ix86+x86_64   1.0.0    50.00 322.00 372.00     OK
+#>                                                                                       check_url
+#> 1  https://www.R-project.org/nosvn/R.check/r-devel-linux-x86_64-debian-clang/dplyr-00check.html
+#> 2    https://www.R-project.org/nosvn/R.check/r-devel-linux-x86_64-debian-gcc/dplyr-00check.html
+#> 3  https://www.R-project.org/nosvn/R.check/r-devel-linux-x86_64-fedora-clang/dplyr-00check.html
+#> 4    https://www.R-project.org/nosvn/R.check/r-devel-linux-x86_64-fedora-gcc/dplyr-00check.html
+#> 5        https://www.R-project.org/nosvn/R.check/r-devel-windows-ix86+x86_64/dplyr-00check.html
+#> 6             https://www.R-project.org/nosvn/R.check/r-patched-linux-x86_64/dplyr-00check.html
+#> 7              https://www.R-project.org/nosvn/R.check/r-patched-solaris-x86/dplyr-00check.html
+#> 8             https://www.R-project.org/nosvn/R.check/r-release-linux-x86_64/dplyr-00check.html
+#> 9               https://www.R-project.org/nosvn/R.check/r-release-osx-x86_64/dplyr-00check.html
+#> 10     https://www.R-project.org/nosvn/R.check/r-release-windows-ix86+x86_64/dplyr-00check.html
+#> 11               https://www.R-project.org/nosvn/R.check/r-oldrel-osx-x86_64/dplyr-00check.html
+#> 12      https://www.R-project.org/nosvn/R.check/r-oldrel-windows-ix86+x86_64/dplyr-00check.html
+```
+
+What if you wanted to use this same information to create an output
+similar to sessioninfo, but append to it the information from the
+current CRAN checks for each loaded namespace (package) tailored to your
+platform.
+
+This is what `craninfo` does for you\!
+
+With this information you can
+
+  - See if there are any problems with the packages that you are using
+    in an R/Rmd script
+  - Attach it to a {reprex} to help the maintainer help you even more
+    efficiently.
+  - See if you have the most current version of a package installed, and
+    if not you can decide if you should install it given it’s current
+    CRAN status.
+  - Compare multiple CRAN check flavors with ease.
+
 ## Console Output
 
 ### Current CRAN release
 
 ``` r
 craninfo()
-#> ── Check Info ───────────────────────────────────────────────────────────
+#> ── Check Info (Sys.time: 2020-06-06 15:31:57) ───────────────────────────
+#> ── Flavor: release-osx-x86_64 ───────────────────────────────────────────
 #>        package                                    source       date     loaded cran_version release  
 #> 1           ps                            CRAN (R 3.6.2) 2020-05-08      1.3.3        1.3.3   ERROR  
 #> 2         curl                            CRAN (R 3.6.0) 2019-12-02        4.3          4.3    WARN  
@@ -83,7 +143,7 @@ craninfo()
 #> 46        yaml                            CRAN (R 3.6.0) 2020-02-01      2.2.1        2.2.1      OK  
 #> 47 addressable Github (ropenscilabs/addressable@d04bccf) 2020-06-02   0.0.1.91         <NA>    <NA> *
 #> 48     cchecks     Github (ropenscilabs/cchecks@df3c80c) 2020-06-02   0.1.8.94         <NA>    <NA> *
-#> 49    craninfo                                     local 2020-06-06 0.0.0.9000         <NA>    <NA> *
+#> 49    craninfo                                     local 2020-06-06      0.0.1         <NA>    <NA> *
 #> 50   htmltools                            CRAN (R 3.6.0) 2019-10-04      0.4.0         <NA>    <NA> *
 ```
 
@@ -91,7 +151,8 @@ craninfo()
 
 ``` r
 craninfo(cran_type = 'oldrel')
-#> ── Check Info ───────────────────────────────────────────────────────────
+#> ── Check Info (Sys.time: 2020-06-06 15:31:59) ───────────────────────────
+#> ── Flavor: oldrel-osx-x86_64 ────────────────────────────────────────────
 #>        package                                    source       date     loaded cran_version oldrel  
 #> 1         Rcpp                            CRAN (R 3.6.3) 2020-04-09    1.0.4.6      1.0.4.6  ERROR  
 #> 2    rmarkdown        Github (rstudio/rmarkdown@18ba267) 2020-01-30      2.1.1          2.2  ERROR *
@@ -141,6 +202,6 @@ craninfo(cran_type = 'oldrel')
 #> 46        yaml                            CRAN (R 3.6.0) 2020-02-01      2.2.1        2.2.1     OK  
 #> 47 addressable Github (ropenscilabs/addressable@d04bccf) 2020-06-02   0.0.1.91         <NA>   <NA> *
 #> 48     cchecks     Github (ropenscilabs/cchecks@df3c80c) 2020-06-02   0.1.8.94         <NA>   <NA> *
-#> 49    craninfo                                     local 2020-06-06 0.0.0.9000         <NA>   <NA> *
+#> 49    craninfo                                     local 2020-06-06      0.0.1         <NA>   <NA> *
 #> 50   htmltools                            CRAN (R 3.6.0) 2019-10-04      0.4.0         <NA>   <NA> *
 ```
