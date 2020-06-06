@@ -13,11 +13,11 @@
 #'  }
 #' }
 # @seealso [sessioninfo][sessioninfo::sessioninfo],[cch_pkgs][cchecks::cch_pkgs]
-#' @rdname checkinfo
+#' @rdname craninfo
 #' @export 
 #' @importFrom sessioninfo session_info
 #' @importFrom cchecks cch_pkgs
-checkinfo <- function(cran_type = 'release', platform = get_os(), machine = R.version$arch, linux_type = ifelse(platform=='linux','debian-clang',NA_character_)){
+craninfo <- function(cran_type = 'release', platform = get_os(), machine = R.version$arch, linux_type = ifelse(platform=='linux','debian-clang',NA_character_)){
   
   si <- sessioninfo::package_info()
   sip <- as.data.frame(si)
@@ -65,7 +65,7 @@ checkinfo <- function(cran_type = 'release', platform = get_os(), machine = R.ve
   
   sip_check$version_diff <- ifelse((sip_check$loaded!=sip_check$cran_version)%in%c(TRUE,NA),'*','')
   
-  class(sip_check) <- c('checkinfo','data.frame')
+  class(sip_check) <- c('craninfo','data.frame')
   
   sip_check
 }

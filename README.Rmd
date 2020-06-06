@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# checkinfo
+# craninfo
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
@@ -23,34 +23,28 @@ The goal of `checkinfo` is to surface `CRAN` checks information into a `sessioni
 
 ## Installation
 
-You can install the released version of checkinfo from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("checkinfo")
-```
-
-And the development version from [GitHub](https://github.com/) with:
-
 ``` r
 # install.packages("remotes")
-remotes::install_github("yonicd/checkinfo")
+remotes::install_github("yonicd/craninfo")
 ```
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
 
 ```{r example}
-library(checkinfo)
+library(craninfo)
 ```
 
 ## Console Output
 
-```{r}
-checkinfo()
+### Current CRAN release
+
+```{r,R.options = list(width = 120)}
+craninfo()
 ```
 
-## Table Output
+### Old CRAN release
 
-```{r}
-knitr::kable(checkinfo())
+```{r,R.options = list(width = 120)}
+craninfo(cran_type = 'oldrel')
 ```
