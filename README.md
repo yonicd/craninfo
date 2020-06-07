@@ -92,7 +92,7 @@ With this information you can
 
 ``` r
 craninfo()
-#> ── Check Info (Sys.time: 2020-06-07 07:28:57) ───────────────────────────
+#> ── Check Info (Sys.time: 2020-06-07 07:31:56) ───────────────────────────
 #> ── Flavor: r-release-osx-x86_64 ─────────────────────────────────────────
 #>        package                                    source       date     loaded cran_version release  
 #> 1           ps                            CRAN (R 3.6.2) 2020-05-08      1.3.3        1.3.3   ERROR  
@@ -151,7 +151,7 @@ craninfo()
 
 ``` r
 craninfo(cran_type = c('release','oldrel'))
-#> ── Check Info (Sys.time: 2020-06-07 07:28:59) ───────────────────────────
+#> ── Check Info (Sys.time: 2020-06-07 07:31:58) ───────────────────────────
 #> ── Flavor: r-release-osx-x86_64, r-oldrel-osx-x86_64 ────────────────────
 #>        package                                    source       date     loaded cran_version oldrel release  
 #> 1           ps                            CRAN (R 3.6.2) 2020-05-08      1.3.3        1.3.3     OK   ERROR  
