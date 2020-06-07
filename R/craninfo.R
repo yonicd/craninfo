@@ -17,18 +17,24 @@
 #' @export 
 #' @importFrom sessioninfo session_info
 #' @importFrom cchecks cch_pkgs
-craninfo <- function(cran_type = 'release', platform = get_os(), machine = R.version$arch, linux_type = ifelse(platform=='linux','debian-clang',NA_character_)){
+craninfo <- function(cran_type = 'release', platform = get_os(), machine = R.version$arch, linux_type = ifelse(platform=='linux'&cran_type=='devel','debian-clang',NA_character_)){
   
   si <- sessioninfo::package_info()
   sip <- as.data.frame(si)
   
   sip_check_raw <- cchecks::cch_pkgs(sip$package)
   
-  this_flavor <- build_flavor(cran_type,platform,machine,linux_type)
+  this_flavor <- sapply(cran_type,build_flavor,
+         platform = platform,
+         machine = machine,
+         linux_type = linux_type,
+         USE.NAMES = FALSE)
+  
+  grep_flavor <- paste0(sprintf("(%s)",this_flavor),collapse = '|')
   
   sip_check_list <- lapply(sip_check_raw,function(y){
     
-    idx <- grepl(this_flavor,y$data$checks$flavor)
+    idx <- grepl(grep_flavor,y$data$checks$flavor)
     
     ret <- y$data$checks[idx,c('flavor','version','status')]
     ret$package <- y$data$package
@@ -45,21 +51,25 @@ craninfo <- function(cran_type = 'release', platform = get_os(), machine = R.ver
     x
   })
   
-  sip_check_wide <- Reduce(f = function(x,y) merge(x,y,by=c('package','version')),sip_check_split)
+  sip_check_wide <- Reduce(f = function(x,y) merge(x,y,by=c('package','cran_version')),sip_check_split)
   
   sip_check <- merge(sip[c('package','source','date','loadedversion')],sip_check_wide,by = 'package',all.x = TRUE)
   
   names(sip_check)[grepl('loadedversion',names(sip_check))] <- 'loaded'
   
-  names(sip_check)[grepl(this_flavor,names(sip_check))] <- cran_type
+  adj_names <- names(sip_check)[grepl(grep_flavor,names(sip_check))]
   
-  note_lvls <- c('OK','NOTE','WARN','ERROR','FAIL')
+  names(sip_check)[grepl(grep_flavor,names(sip_check))] <- sapply(strsplit(adj_names,'-'),'[[',2)
   
-  these_lvls <- intersect(note_lvls,unique(sip_check[[cran_type]]))
+  status_lvls <- c('OK','NOTE','WARN','ERROR','FAIL')
   
-  sip_check[[cran_type]] <- factor(sip_check[[cran_type]],levels = these_lvls)
+  this_status <- unique(unlist(c(sip_check[,cran_type])))
   
-  sip_check <- sip_check[order(sip_check[[cran_type]],decreasing = c(TRUE)),]
+  these_lvls <- intersect(status_lvls,this_status)
+  
+  sip_check[[cran_type[1]]] <- factor(sip_check[[cran_type[1]]],levels = these_lvls)
+  
+  sip_check <- sip_check[order(sip_check[[cran_type[1]]],decreasing = c(TRUE)),]
   
   rownames(sip_check) <- NULL
   

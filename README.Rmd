@@ -64,8 +64,8 @@ With this information you can
 craninfo()
 ```
 
-### Old CRAN release
+### Compare CRAN releases
 
 ```{r,R.options = list(width = 120)}
-craninfo(cran_type = 'oldrel')
+craninfo(cran_type = c('release','oldrel'))
 ```

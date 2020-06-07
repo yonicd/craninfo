@@ -1,6 +1,6 @@
 Package: craninfo
 Title: On demand CRAN checks for your current R session
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: person(given = "Jonathan", family = "Sidi", role =
        c("aut", "cre"), email = "yonicd@gmail.com", comment =
        c(ORCID = "YOUR-ORCID-ID"))

@@ -8,7 +8,8 @@ craninfo(
   cran_type = "release",
   platform = get_os(),
   machine = R.version$arch,
-  linux_type = ifelse(platform == "linux", "debian-clang", NA_character_)
+  linux_type = ifelse(platform == "linux" & cran_type == "devel", "debian-clang",
+    NA_character_)
 )
 }
 \arguments{
