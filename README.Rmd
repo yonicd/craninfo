@@ -66,6 +66,6 @@ craninfo()
 
 ### Compare CRAN releases
 
-```{r,R.options = list(width = 120)}
+```{r,R.options = list(width = 130)}
 craninfo(cran_type = c('release','oldrel'))
 ```
